@@ -12,18 +12,18 @@ const loginSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const validation = loginSchema.safeParse(body);
+    const parsed = loginSchema.safeParse(body);
 
     // Se validação falhar
-    if (!validation.success) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Dados inválidos" + validation.error.message },
+        { error: "Dados inválidos" + parsed.error.message },
         { status: 400 },
       );
     }
 
     // Dados validados
-    const { email, password } = validation.data;
+    const { email, password } = parsed.data;
 
     // Busca usuário da academia
     const user = await prisma.user.findUnique({
