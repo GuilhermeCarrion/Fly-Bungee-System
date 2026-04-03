@@ -1,17 +1,14 @@
 import { prisma } from "@/lib/prisma";
+import { getBearerToken } from "@/lib/token";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json(
-        { error: "Token não fornecido" },
-        { status: 401 },
-      );
-    }
-    // Removendo o "Bearer "
-    const token = authHeader.substring(7);
+      const token = getBearerToken(req);
+
+      if(!token) {
+        return NextResponse.json({error:'Não autenticado'}, {status:401})
+      }
 
     // Removendo sessão do banco e invalidando token
     await prisma.session.deleteMany({

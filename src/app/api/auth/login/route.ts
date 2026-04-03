@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const parsed = loginSchema.safeParse(body);
 
-    // Se validação falhar
+    // Se validação falhar - dados fora do padrão
     if (!parsed.success) {
       return NextResponse.json(
         { error: "Dados inválidos" + parsed.error.message },
@@ -49,7 +49,11 @@ export async function POST(req: Request) {
 
     // Gerando JWT
     const token = jwt.sign(
-      { userId: user.id, email: user.email }, //Payload
+      {
+        userId: user.id,
+        role: user.role,
+        academyId: user.academyId,
+      }, //Payload
       process.env.JWT_SECRET!,
       { expiresIn: "7d" },
     );
