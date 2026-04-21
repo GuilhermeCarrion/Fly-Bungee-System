@@ -4,35 +4,28 @@ import { api } from "@/lib/axios";
 import { loginSchema } from "@/schemas/login-schema";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
+import type { LoginFormData } from "@/schemas/login-schema";
+import { AxiosError } from "axios";
 
 export function useLogin() {
   const router = useRouter();
-  const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async ({
-      email,
-      password,
-    }: {
-      email: string;
-      password: string;
-    }) => {
-      const validated = loginSchema.parse({ email, password });
+    mutationFn: async (data: LoginFormData) => {
+      const validated = loginSchema.parse(data);
       const response = await api.post("/auth/login", validated);
       return response.data;
     },
     onSuccess: (data) => {
       // Assume que o back retorna token no body
       setToken(data.token);
-      toast({ title: "Login realizado com sucesso!" });
+      toast.success("Login realizado com sucesso!");
       router.push("/dashboard");
     },
-    onError: (error: any) => {
-      toast({
-        variant: "destructive",
-        title: error.response?.data?.error || "Erro no login",
-      });
+    onError: (error: unknown) => {
+      const err = error as AxiosError<[error: string]>;
+      toast.error(err.response?.data?.error || "Erro no login");
     },
   });
 }

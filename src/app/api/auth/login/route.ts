@@ -70,6 +70,7 @@ export async function POST(req: Request) {
 
     // Retornando sucesso e dados do usuário sem senha
     return NextResponse.json({
+      token,
       user: {
         id: user.id,
         name: user.name,

@@ -1,51 +1,68 @@
+// app/login/page.tsx
 import { LoginForm } from "@/components/forms/LoginForm";
-import { Card, CardContent } from "@/components/ui/card";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-400 via-amber-400 to-emerald-400 flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-8">
-        {/* Lado esquerdo: Branding */}
-        <div className="lg:w-1/2 flex flex-col justify-center text-black space-y-6">
-          <div>
-            <h1 className="text-5xl font-serif font-bold">Moven</h1>
-            <p className="text-lg font-sans uppercase tracking-wide">
+    <div className="h-screen flex">
+      {/* Seção Esquerda: Branding - 70% */}
+      <div className="hidden lg:flex lg:w-7/10 bg-gradient-to-br from-yellow-400 via-amber-400 to-emerald-400 flex-col justify-center px-20 py-8">
+        <div className="space-y-12 max-w-lg">
+          <div className="space-y-4">
+            <h1 className="text-7xl font-serif font-bold text-black">Moven</h1>
+            <p className="text-xl font-sans uppercase tracking-widest text-black font-light">
               KINETIC ELEVATION
             </p>
           </div>
-          <p className="text-xl leading-relaxed">
+
+          <p className="text-lg leading-relaxed text-black font-light max-w-md">
             Desafiando a gravidade e redefinindo performance. Acesse seu portal
             de gestão de estúdio para orquestrar o momentum do seu negócio.
           </p>
-          {/* Icone circular SVG */}
-          <div className="w-32 h-32 mx-auto bg-blue-200 rounded-full flex items-center justify-center">
-            {/* Silhueta SVG */}
-            <span>Icone dinamico</span>
-          </div>
-          <div className="text-sm uppercase font-bold">
-            STATUS: READY FOR LAUNCH
-          </div>
-          <p className="italic font-serif text-lg">
-            &quot; O pico é apenas o começo da queda.&quot;
-          </p>
-        </div>
 
-        {/* Lado direito: FORM */}
-        <div className="lg:w-1/2 flex items-center justify-center">
-          <Card className="w-full max-w-md shadow-2xl">
-            <CardContent className="p-8 space-y-4">
-              <div className="text-center space-y-2">
-                <h2 className="text-3xl font-serif font-bold text-gray-800">
-                  Bem-Vindo
-                </h2>
-                <p className="text-gray-600">
-                  Acesse sua conta para continuar a jornada
-                </p>
-              </div>
-              <LoginForm />
-              {/* Adicionar Google link depois */}
-            </CardContent>
-          </Card>
+          {/* Ícone dinâmico */}
+          <div className="w-48 h-48 bg-blue-200 rounded-full flex items-center justify-center shadow-xl">
+            <span className="text-sm text-gray-600">Ícone dinâmico</span>
+          </div>
+
+          <div className="space-y-6 pt-8 border-t-2 border-black/30">
+            <p className="text-sm uppercase font-bold text-black tracking-wider">
+              STATUS: READY FOR LAUNCH
+            </p>
+            <p className="italic font-serif text-lg text-black">
+              &quot;O pico é apenas o começo da queda.&quot;
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Seção Direita: Form - 30% */}
+      <div className="w-full lg:w-3/10 bg-white flex flex-col items-center justify-center px-8 py-8 lg:py-0">
+        <div className="w-full max-w-xs space-y-6">
+          {/* Header do Form */}
+          <div className="space-y-2">
+            <h2 className="text-2xl font-serif font-bold text-gray-900">
+              Bem-vindo
+            </h2>
+            <p className="text-gray-500 text-xs leading-relaxed">
+              Acesse sua conta para continuar a jornada.
+            </p>
+          </div>
+
+          {/* Form Component */}
+          <LoginForm />
+
+          {/* Footer do Form */}
+          <div className="text-center text-xs text-gray-500 pt-2">
+            <p>
+              Não tem conta?{" "}
+              <a
+                href="#"
+                className="text-amber-600 hover:text-amber-700 font-semibold"
+              >
+                Solicite acesso
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

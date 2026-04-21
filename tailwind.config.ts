@@ -1,10 +1,18 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
   darkMode: "media",
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["Inter", "sans-serif"], // Textos normais (body, labels, inputs)
+        heading: ["Space Grotesk", "sans-serif"], // Títulos (h1, h2, botões principais)
+      },
       colors: {
         brand: {
           cyan: {
