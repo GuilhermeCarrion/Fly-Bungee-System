@@ -15,4 +15,10 @@ const eslintConfig = defineConfig([
   ]),
 ]);
 
-export default eslintConfig;
+export default eslintConfig[
+  {
+    rules: {
+      "no-explicty-any": "off",
+    },
+  }
+];

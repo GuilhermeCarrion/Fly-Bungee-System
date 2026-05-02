@@ -1,18 +1,21 @@
-"use client";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/axios";
-import { loginSchema } from "@/schemas/login-schema";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import type { LoginFormData } from "@/schemas/login-schema";
 import { AxiosError } from "axios";
+import { z } from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+});
 
 export function useLogin() {
   const router = useRouter();
 
   return useMutation({
-    mutationFn: async (data: LoginFormData) => {
+    mutationFn: async (data: z.infer<typeof loginSchema>) => {
       const validated = loginSchema.parse(data);
       const response = await api.post("/auth/login", validated);
       return response.data;
@@ -24,7 +27,7 @@ export function useLogin() {
       router.push("/dashboard");
     },
     onError: (error: unknown) => {
-      const err = error as AxiosError<[error: string]>;
+      const err = error as AxiosError<{ error: string }>;
       toast.error(err.response?.data?.error || "Erro no login");
     },
   });

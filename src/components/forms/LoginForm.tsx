@@ -3,7 +3,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginFormData } from "@/schemas/login-schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +10,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
+import z from "zod";
+
+const loginSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +33,11 @@ export function LoginForm() {
   const onSubmit = (data: LoginFormData) => mutate(data);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 w-full">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="space-y-8 w-full"
+      noValidate
+    >
       {/* Campo Email */}
       <div className="space-y-3">
         <Label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -99,16 +110,6 @@ export function LoginForm() {
       >
         {isPending ? "Entrando..." : "Entrar"}
       </Button>
-
-      {/* Link Recuperar Senha */}
-      <div className="text-center pt-2">
-        <a
-          href="#"
-          className="text-xs text-gray-500 hover:text-amber-600 transition-colors"
-        >
-          Esqueceu sua senha?
-        </a>
-      </div>
     </form>
   );
 }

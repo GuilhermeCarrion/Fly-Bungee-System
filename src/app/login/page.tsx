@@ -50,19 +50,6 @@ export default function LoginPage() {
 
           {/* Form Component */}
           <LoginForm />
-
-          {/* Footer do Form */}
-          <div className="text-center text-xs text-gray-500 pt-2">
-            <p>
-              Não tem conta?{" "}
-              <a
-                href="#"
-                className="text-amber-600 hover:text-amber-700 font-semibold"
-              >
-                Solicite acesso
-              </a>
-            </p>
-          </div>
         </div>
       </div>
     </div>

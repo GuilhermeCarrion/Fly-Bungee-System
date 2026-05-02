@@ -4,6 +4,7 @@ export const api = axios.create({
   baseURL: "/api",
 });
 
+// Interceptador que envia para todas as requisições o toke (Deixa o usuário como logado)
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
