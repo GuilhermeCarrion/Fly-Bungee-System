@@ -11,11 +11,7 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { useLogin } from "@/hooks/useLogin";
 import z from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
-});
+import { loginSchema } from "@/schemas/auth.schema";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 

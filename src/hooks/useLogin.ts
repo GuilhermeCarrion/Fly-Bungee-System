@@ -1,15 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { api } from "@/lib/axios";
+import api from "@/lib/axios";
 import { setToken } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
 import { z } from "zod";
-
-const loginSchema = z.object({
-  email: z.string().email("Email inválido"),
-  password: z.string().min(6, "Senha deve ter no mínimo 6 caracteres"),
-});
+import { loginSchema } from "@/schemas/auth.schema";
 
 export function useLogin() {
   const router = useRouter();
