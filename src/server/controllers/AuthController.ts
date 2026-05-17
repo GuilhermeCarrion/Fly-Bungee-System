@@ -23,14 +23,27 @@ export class AuthController {
 
     // Validando se login foi efetuado com sucesso
     try {
-      const token = await authService.login(email, password);
+      const result = await authService.login(email, password);
 
-      return NextResponse.json({ token }, { status: 200 });
+      return NextResponse.json(result, { status: 200 });
     } catch (error: any) {
       // Capturando erro do Service
       const errorMessage = error.message || "Erro interno no servidor";
 
       return NextResponse.json({ error: errorMessage }, { status: 401 });
+    }
+  }
+
+  // Retorna dados do usuário autenticado
+  async getMe(userId: string) {
+    try {
+      const user = await authService.getProfile(userId);
+      return NextResponse.json(user, { status: 200 });
+    } catch (error: any) {
+      return NextResponse.json(
+        { error: error.message || "Erro ao buscar usuário" },
+        { status: 400 },
+      );
     }
   }
 }

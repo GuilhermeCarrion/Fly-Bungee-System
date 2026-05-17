@@ -1,5 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -14,8 +15,10 @@ export default function RootLayout({
     <html lang="pt-BR">
       <body>
         <QueryClientProvider client={queryClient}>
-          {children}
-          <Toaster />
+          <AuthProvider>
+            {children}
+            <Toaster />
+          </AuthProvider>
         </QueryClientProvider>
       </body>
     </html>

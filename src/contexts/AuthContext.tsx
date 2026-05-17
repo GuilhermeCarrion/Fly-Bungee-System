@@ -6,14 +6,19 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import api from "@/lib/axios";
+import { apiPrivate, apiPublic } from "@/lib/axios";
 
 /**
  * creatContext: Conteiner de contexto.
+ *
  * useCallBack: Memoriza funções para evitar que sejam recriadas.
+ *
  * useContext: Permite qua um componente consuma o contexto.
+ *
  * useEffect: Dispara efeitos colaterais (carregar dados para montar componente).
+ *
  * useState: Gerencia estado local (user, loading, isAuthenticated).
+ *
  * ReactNode: Tipo que representa qualquer conteudo renderizável (filhos do provider).
  */
 
@@ -23,7 +28,7 @@ interface User {
   name?: string;
 }
 
-// Estrutura do objeto usuário
+// Estrutura do objeto contexto
 interface AuthContextData {
   user: User | null;
   isAuthenticated: boolean;
@@ -49,20 +54,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Executa uma unica vez quando o Provider é montado (Array de dependencias vazio)
   useEffect(() => {
     const loadStoredToken = async () => {
       try {
         const token = localStorage.getItem("@App:token");
         if (token) {
-          api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-          const response = await api.get<User>("/me");
+          apiPrivate.defaults.headers.common["Authorization"] =
+            `Bearer ${token}`;
+          const response = await apiPrivate.get<User>("/auth/me");
           setUser(response.data);
           setIsAuthenticated(true);
         }
       } catch (error) {
         console.error("Error loading token:", error);
         localStorage.removeItem("@App:token");
-        delete api.defaults.headers.common["Authorization"];
+        delete apiPrivate.defaults.headers.common["Authorization"];
       } finally {
         setLoading(false);
       }
@@ -72,14 +79,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = useCallback(async (email: string, password: string) => {
     try {
-      const response = await api.post<{ token: string; user: User }>("/login", {
-        email,
-        password,
-      });
+      const response = await apiPublic.post<{ token: string; user: User }>(
+        "/auth/login",
+        {
+          email,
+          password,
+        },
+      );
       const { token, user } = response.data;
 
       localStorage.setItem("@App:token", token);
-      api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      apiPublic.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
       setIsAuthenticated(true);
     } catch (error) {
@@ -90,11 +100,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signOut = useCallback(() => {
     localStorage.removeItem("@App:token");
-    delete api.defaults.headers.common["Authorization"];
+    delete apiPrivate.defaults.headers.common["Authorization"];
     setUser(null);
     setIsAuthenticated(false);
   }, []);
 
+  // Disponibilizando os valores e funções para todos os componentes filhos. Value é o objeto que qualquer consumidor
+  // do contexto receberá ao chamar useAuth()
   return (
     <AuthContext.Provider
       value={{
@@ -110,6 +122,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
+/**
+ * Encapsula o acesso ao contexto, se algum componente tentar usar useAuth sem estar dentro de AuthProvider,
+ * o erro será lançado com uma mensagem clara.
+ */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

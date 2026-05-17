@@ -16,11 +16,15 @@ import axios, {
  * e caso seja "401 - Não te conheço", limpa o sistema e joga para o login.
  */
 
-const api: AxiosInstance = axios.create({
+export const apiPublic: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
 });
 
-api.interceptors.request.use(
+export const apiPrivate: AxiosInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+});
+
+apiPrivate.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
 
@@ -35,10 +39,11 @@ api.interceptors.request.use(
   },
 );
 
-api.interceptors.response.use(
+apiPrivate.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    const requestUrl = error.config?.url || "";
+    if (error.response?.status === 401 && !requestUrl.includes("/auth/")) {
       if (typeof window !== "undefined") {
         localStorage.removeItem("token");
         window.location.href = "/login";
@@ -47,5 +52,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export default api;

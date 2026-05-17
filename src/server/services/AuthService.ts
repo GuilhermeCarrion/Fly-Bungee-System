@@ -21,19 +21,23 @@ export class AuthService {
 
     Retorno: token do usuário para persistência
   */
-  async login(email: string, password: string): Promise<string> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ token: string; user: Omit<User, "password"> }> {
     const user = (await userRepository.findByEmail(
       email,
     )) as UserWithAcademy | null;
 
-    // Comparando senha
-    const passwordValided = await bcrypt.compare(
-      password,
-      (user as any).password,
-    );
+    if (!user) {
+      throw new Error("Email ou senha invalidos");
+    }
 
-    if (!user || !passwordValided || !user.active) {
-      throw new Error("Email ou senha inválidos");
+    // Comparando senha
+    const passwordValided = await bcrypt.compare(password, user.password);
+
+    if (!passwordValided || !user.active) {
+      throw new Error("Email ou senha invalidos");
     }
 
     const payload = { userId: user.id };
@@ -46,6 +50,17 @@ export class AuthService {
 
     await sessionRepository.create({ userId: user.id, token, expiresAt });
 
-    return token;
+    const { password: _, ...userWithoutPassword } = user;
+    return { token, user: userWithoutPassword };
+  }
+
+  // Busca perfil do usuário autenticado
+  async getProfile(userId: string) {
+    const user = userRepository.findById(userId);
+
+    if (!user) {
+      throw new Error("Usuário não encontrado");
+    }
+    return user;
   }
 }

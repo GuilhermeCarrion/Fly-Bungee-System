@@ -9,24 +9,34 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
-import { useLogin } from "@/hooks/useLogin";
-import z from "zod";
-import { loginSchema } from "@/schemas/auth.schema";
-
-type LoginFormData = z.infer<typeof loginSchema>;
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { loginSchema, LoginSchema } from "@/schemas/auth.schema";
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate, isPending } = useLogin();
+  const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
+  const router = useRouter();
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
+    formState: { errors, isSubmitting },
+  } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => mutate(data);
+  const onSubmit = async (data: LoginSchema) => {
+    try {
+      setError(null);
+      await signIn(data.email, data.password);
+      router.push("/dashboard");
+    } catch (err: any) {
+      const message = err?.response?.data?.error || "Email ou senha inválidos";
+      setError(message);
+    }
+  };
 
   return (
     <form
@@ -34,6 +44,12 @@ export function LoginForm() {
       className="space-y-8 w-full"
       noValidate
     >
+      {/* Mensagem de erro */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 text-sm p-3 rounded-lg">
+          {error}
+        </div>
+      )}
       {/* Campo Email */}
       <div className="space-y-3">
         <Label htmlFor="email" className="text-sm font-medium text-gray-700">
@@ -102,9 +118,9 @@ export function LoginForm() {
       <Button
         type="submit"
         className="w-full h-11 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 text-white font-semibold rounded-lg transition-all duration-200 mt-6"
-        disabled={isPending}
+        disabled={isSubmitting}
       >
-        {isPending ? "Entrando..." : "Entrar"}
+        {isSubmitting ? "Entrando..." : "Entrar"}
       </Button>
     </form>
   );

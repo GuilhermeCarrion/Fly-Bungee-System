@@ -8,4 +8,17 @@ export class UserRepository {
       where: { email },
     });
   }
+
+  // Método de busca de usuário pelo ID
+  async findById(id: string) {
+    return await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        active: true,
+      },
+    });
+  }
 }

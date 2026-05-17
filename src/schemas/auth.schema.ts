@@ -7,3 +7,5 @@ export const loginSchema = z.object({
     .trim()
     .min(6, "Senha deve conter no mínimo 6 caracteres"),
 });
+
+export type LoginSchema = z.infer<typeof loginSchema>;
