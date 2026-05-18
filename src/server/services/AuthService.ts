@@ -24,7 +24,7 @@ export class AuthService {
   async login(
     email: string,
     password: string,
-  ): Promise<{ token: string; user: Omit<User, "password"> }> {
+  ): Promise<{ token: string; user: Omit<UserWithAcademy, "password"> }> {
     const user = (await userRepository.findByEmail(
       email,
     )) as UserWithAcademy | null;

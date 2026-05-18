@@ -26,6 +26,7 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  academy?: { name: string };
 }
 
 // Estrutura do objeto contexto

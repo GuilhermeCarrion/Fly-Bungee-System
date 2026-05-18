@@ -6,6 +6,9 @@ export class UserRepository {
   async findByEmail(email: string) {
     return await prisma.user.findUnique({
       where: { email },
+      include: {
+        academy: { select: { name: true } },
+      },
     });
   }
 
@@ -18,6 +21,10 @@ export class UserRepository {
         email: true,
         name: true,
         active: true,
+        role: true,
+        academy: {
+          select: { name: true },
+        },
       },
     });
   }
