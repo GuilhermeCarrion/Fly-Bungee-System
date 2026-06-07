@@ -25,7 +25,7 @@ export class ProfessorRepository {
     });
   }
 
-  async update(id: string, data: ProfessorSchema) {
+  async update(id: string, data: Partial<ProfessorSchema>) {
     return await prisma.professor.update({
       where: { id },
       data,
