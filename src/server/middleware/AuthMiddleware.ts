@@ -11,6 +11,7 @@ export function authenticateRequest(request: Request) {
         { status: 401 },
       ),
       userId: null,
+      academyId: null,
     };
   }
 
@@ -19,9 +20,14 @@ export function authenticateRequest(request: Request) {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
       userId: string;
+      academyId: string;
     };
 
-    return { error: null, userId: decoded.userId };
+    return {
+      error: null,
+      userId: decoded.userId,
+      academyId: decoded.academyId,
+    };
   } catch {
     return {
       error: NextResponse.json(
@@ -29,6 +35,7 @@ export function authenticateRequest(request: Request) {
         { status: 401 },
       ),
       userId: null,
+      academyId: null,
     };
   }
 }

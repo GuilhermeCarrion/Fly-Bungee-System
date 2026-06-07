@@ -40,7 +40,7 @@ export class AuthService {
       throw new Error("Email ou senha invalidos");
     }
 
-    const payload = { userId: user.id };
+    const payload = { userId: user.id, academyId: user.academyId };
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
       expiresIn: "7d",
     });
