@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 const professorService = new ProfessorService();
 
 export class ProfessorController {
-  async strore(req: Request, academyId: string) {
+  async store(req: Request, academyId: string) {
     try {
       const body = await req.json();
 

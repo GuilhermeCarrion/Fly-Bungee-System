@@ -10,7 +10,8 @@ datasource db {
 
 enum Role {
   ADMIN
-  USER
+  GESTOR
+  PROFESSOR
 }
 
 enum AppointmentStatus {

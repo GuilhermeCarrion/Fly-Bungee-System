@@ -6,7 +6,7 @@ import React, {
   useState,
   ReactNode,
 } from "react";
-import { apiPrivate, apiPublic } from "@/lib/axios";
+import { apiPrivate, apiPublic, TOKEN_KEY } from "@/lib/axios";
 
 /**
  * creatContext: Conteiner de contexto.
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const loadStoredToken = async () => {
       try {
-        const token = localStorage.getItem("@App:token");
+        const token = localStorage.getItem(TOKEN_KEY);
         if (token) {
           apiPrivate.defaults.headers.common["Authorization"] =
             `Bearer ${token}`;
@@ -69,7 +69,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         }
       } catch (error) {
         console.error("Error loading token:", error);
-        localStorage.removeItem("@App:token");
+        localStorage.removeItem(TOKEN_KEY);
         delete apiPrivate.defaults.headers.common["Authorization"];
       } finally {
         setLoading(false);
@@ -89,7 +89,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       );
       const { token, user } = response.data;
 
-      localStorage.setItem("@App:token", token);
+      localStorage.setItem(TOKEN_KEY, token);
       apiPublic.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       setUser(user);
       setIsAuthenticated(true);
@@ -100,7 +100,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("@App:token");
+    localStorage.removeItem(TOKEN_KEY);
     delete apiPrivate.defaults.headers.common["Authorization"];
     setUser(null);
     setIsAuthenticated(false);

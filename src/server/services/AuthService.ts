@@ -56,7 +56,7 @@ export class AuthService {
 
   // Busca perfil do usuário autenticado
   async getProfile(userId: string) {
-    const user = userRepository.findById(userId);
+    const user = await userRepository.findById(userId);
 
     if (!user) {
       throw new Error("Usuário não encontrado");

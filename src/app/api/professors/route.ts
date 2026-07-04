@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   if (error) return error;
 
-  return professorController.strore(req, academyId);
+  return professorController.store(req, academyId);
 }
 
 export async function GET(req: Request) {

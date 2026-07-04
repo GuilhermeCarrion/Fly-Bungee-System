@@ -24,9 +24,12 @@ export const apiPrivate: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
 });
 
+// Chave unica do token no localStorage
+export const TOKEN_KEY = "@Moven:token";
+
 apiPrivate.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem(TOKEN_KEY);
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -45,7 +48,7 @@ apiPrivate.interceptors.response.use(
     const requestUrl = error.config?.url || "";
     if (error.response?.status === 401 && !requestUrl.includes("/auth/")) {
       if (typeof window !== "undefined") {
-        localStorage.removeItem("token");
+        localStorage.removeItem(TOKEN_KEY);
         window.location.href = "/login";
       }
     }
