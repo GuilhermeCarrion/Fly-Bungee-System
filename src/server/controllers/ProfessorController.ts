@@ -1,3 +1,4 @@
+import { AppError, handleError } from "@/lib/errors";
 import { professorSchema } from "@/schemas/professor.schema";
 import { ProfessorService } from "@/server/services/ProfessorService";
 import { NextResponse } from "next/server";
@@ -12,19 +13,16 @@ export class ProfessorController {
       const parsed = professorSchema.safeParse(body);
 
       if (!parsed.success) {
-        return NextResponse.json(
-          { error: "Dados inválidos: " + parsed.error.issues[0].message },
-          { status: 400 },
+        throw new AppError(
+          "Dados inválidos: " + parsed.error.issues[0].message,
+          400,
         );
       }
 
       const result = await professorService.create(parsed.data, academyId);
       return NextResponse.json(result, { status: 201 });
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: error.message || "Erro interno no servidor" },
-        { status: 400 },
-      );
+    } catch (error) {
+      return handleError(error);
     }
   }
 
@@ -32,11 +30,8 @@ export class ProfessorController {
     try {
       const professors = await professorService.list(academyId);
       return NextResponse.json(professors, { status: 200 });
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: error.message || "Erro ao buscar professores" },
-        { status: 400 },
-      );
+    } catch (error) {
+      return handleError(error);
     }
   }
 
@@ -47,11 +42,8 @@ export class ProfessorController {
         { message: "Professor removido" },
         { status: 200 },
       );
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: error.message || "Erro ao remover professor" },
-        { status: 400 },
-      );
+    } catch (error) {
+      return handleError(error);
     }
   }
 }

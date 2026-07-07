@@ -1,6 +1,7 @@
 import { loginSchema } from "@/schemas/auth.schema";
 import { NextResponse } from "next/server";
 import { AuthService } from "../services/AuthService";
+import { AppError, handleError } from "@/lib/errors";
 
 const authService = new AuthService();
 
@@ -12,9 +13,9 @@ export class AuthController {
     const parsed = loginSchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json(
-        { error: "Dados inválidos " + parsed.error.message },
-        { status: 400 },
+      throw new AppError(
+        "Dados inválidos: " + parsed.error.issues[0].message,
+        400,
       );
     }
 
@@ -26,11 +27,8 @@ export class AuthController {
       const result = await authService.login(email, password);
 
       return NextResponse.json(result, { status: 200 });
-    } catch (error: any) {
-      // Capturando erro do Service
-      const errorMessage = error.message || "Erro interno no servidor";
-
-      return NextResponse.json({ error: errorMessage }, { status: 401 });
+    } catch (error) {
+      return handleError(error);
     }
   }
 
@@ -39,11 +37,8 @@ export class AuthController {
     try {
       const user = await authService.getProfile(userId);
       return NextResponse.json(user, { status: 200 });
-    } catch (error: any) {
-      return NextResponse.json(
-        { error: error.message || "Erro ao buscar usuário" },
-        { status: 400 },
-      );
+    } catch (error) {
+      return handleError(error);
     }
   }
 }

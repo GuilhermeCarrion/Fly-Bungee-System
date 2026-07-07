@@ -1,5 +1,6 @@
 import { ClassSessionSchema } from "@/schemas/classSession.schema";
 import { ClassSessionRepository } from "../repositories/ClassSessionRepository";
+import { AppError } from "@/lib/errors";
 
 const repository = new ClassSessionRepository();
 
@@ -20,7 +21,7 @@ export class ClassSessionService {
   ) {
     const classSession = await repository.findById(id, academyId);
 
-    if (!classSession) throw new Error("Aula não encontrada");
+    if (!classSession) throw new AppError("Aula não encontrada", 404);
 
     return await repository.update(id, data);
   }

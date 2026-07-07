@@ -3,6 +3,7 @@ import { UserRepository } from "../repositories/UserRepository";
 import { SessionRepository } from "../repositories/SessionRepository";
 import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
+import { AppError } from "@/lib/errors";
 
 const userRepository = new UserRepository();
 const sessionRepository = new SessionRepository();
@@ -29,15 +30,17 @@ export class AuthService {
       email,
     )) as UserWithAcademy | null;
 
+    // Credenciais inválidas = 401 (não 404). Mesma mensagem e status do caso de
+    // senha errada abaixo, para não revelar se o e-mail existe (evita enumeration).
     if (!user) {
-      throw new Error("Email ou senha invalidos");
+      throw new AppError("Email ou senha invalidos", 401);
     }
 
     // Comparando senha
     const passwordValided = await bcrypt.compare(password, user.password);
 
     if (!passwordValided || !user.active) {
-      throw new Error("Email ou senha invalidos");
+      throw new AppError("Email ou senha invalidos", 401);
     }
 
     const payload = { userId: user.id, academyId: user.academyId };
@@ -59,7 +62,7 @@ export class AuthService {
     const user = await userRepository.findById(userId);
 
     if (!user) {
-      throw new Error("Usuário não encontrado");
+      throw new AppError("Usuário não encontrado", 404);
     }
     return user;
   }

@@ -1,3 +1,4 @@
+import { AppError, handleError } from "@/lib/errors";
 import { AppointmentService } from "../services/AppointmentService";
 import { appointmentSchema } from "@/schemas/appointment.schema";
 import { NextResponse } from "next/server";
@@ -11,13 +12,13 @@ export class AppointmentController {
       const parsed = appointmentSchema.safeParse(body);
 
       if (!parsed.success) {
-        return NextResponse.json({ error: "Dados inválidos" }, { status: 400 });
+        throw new AppError("Dados inválidos", 400);
       }
 
       const result = await service.create(parsed.data, academyId);
       return NextResponse.json(result, { status: 201 });
-    } catch (error: any) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
+    } catch (error) {
+      return handleError(error);
     }
   }
 }
