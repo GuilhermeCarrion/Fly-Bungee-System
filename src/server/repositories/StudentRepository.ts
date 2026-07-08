@@ -1,13 +1,13 @@
 import { prisma } from "@/lib/prisma";
-import { StudentSchema } from "@/schemas/students.schema";
+import { Prisma } from "@prisma/client";
 
 export class StudentRepository {
-  async create(data: StudentSchema & { academyId: string }) {
+  async create(data: Prisma.StudentUncheckedCreateInput) {
     return await prisma.student.create({ data });
   }
 
   async findByCpf(cpf: string, academyId: string) {
-    return await prisma.student.findUnique({
+    return await prisma.student.findFirst({
       where: { cpf, academyId },
     });
   }
@@ -25,7 +25,7 @@ export class StudentRepository {
     });
   }
 
-  async update(id: string, data: Partial<StudentSchema>) {
+  async update(id: string, data: Prisma.StudentUpdateInput) {
     return await prisma.student.update({
       where: { id },
       data,

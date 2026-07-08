@@ -75,11 +75,12 @@ model Student {
   id String @id @default(uuid())
   name String
   phone String
-  cpf String @unique
+  cpf String
   email String?
   birthDate DateTime?
   academyId String
 
+  active Boolean @default(true)
   registredAt DateTime @default(now())
 
   heightCm Int?
@@ -90,6 +91,9 @@ model Student {
 
   academy Academy @relation(fields: [academyId], references: [id])
   appointments Appointment[]
+
+  // CPF único POR academia
+  @@unique([academyId, cpf])
 }
 
 model Professor {
