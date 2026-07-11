@@ -31,7 +31,7 @@ export function LoginForm() {
     try {
       setError(null);
       await signIn(data.email, data.password);
-      router.push("/dashboard");
+      router.push("/");
     } catch (err: any) {
       const message = err?.response?.data?.error || "Email ou senha inválidos";
       setError(message);

@@ -21,11 +21,11 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Alunos", href: "/dashboard/alunos", icon: Users },
-  { label: "Planos", href: "/dashboard/planos", icon: ClipboardList },
-  { label: "Agendamentos", href: "/dashboard/agendamentos", icon: Calendar },
-  { label: "Mensagens", href: "/dashboard/mensagens", icon: MessageSquare },
+  { label: "Inicio", href: "/", icon: LayoutDashboard },
+  { label: "Alunos", href: "/alunos", icon: Users },
+  { label: "Planos", href: "/planos", icon: ClipboardList },
+  { label: "Agendamentos", href: "/agendamentos", icon: Calendar },
+  { label: "Mensagens", href: "/mensagens", icon: MessageSquare },
 ];
 
 export function Sidebar({
@@ -69,7 +69,7 @@ export function Sidebar({
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${active ? "bg-amber-50 text-amber-700 font-semibold" : "text-gray-600 hover:bg-gray-100"}`}
+              className={`flex items-center gap-3 p-3 rounded-lg transition-colors ${active ? "bg-cyan-500/30 text-cyan-700 font-medium" : "text-gray-600 hover:bg-gray-100"}`}
               title={isCollapsed ? item.label : undefined}
             >
               <item.icon className="h-5 w-5 flex-shrink-0" />

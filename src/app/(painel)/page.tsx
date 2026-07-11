@@ -2,7 +2,7 @@ import { StatCard } from "@/components/dashboard/StatCard";
 
 export default function DashboardPage() {
   return (
-    <div className="p-6-bg-[#F8F9FA] min-h-screen space-y-6">
+    <div className="min-h-screen space-y-6">
       {/* Topo: KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard title="Alunos Ativos" value="128" icon="users" color="cyan" />
