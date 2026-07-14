@@ -40,7 +40,7 @@ export function useUpdateStudent(id: string) {
   });
 }
 
-export function useInativateStudent(id: string) {
+export function useInactivateStudent() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => apiPrivate.delete(`/students/${id}`),
