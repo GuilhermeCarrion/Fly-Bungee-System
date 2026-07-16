@@ -58,6 +58,7 @@ model User {
 
   academy Academy @relation(fields: [academyId], references: [id])
   sessions Session[]
+  professor Professor?
 }
 
 model Session {
@@ -100,8 +101,9 @@ model Professor {
   id String @id @default(uuid())
   name String
   phone String
-  cpf String @unique
+  cpf String 
   academyId String
+  userId String? @unique  // Conta de login vinculada (role PROFESSOR)
 
   active Boolean @default(true)
   deletedAt DateTime?
@@ -110,7 +112,10 @@ model Professor {
   updatedAt DateTime @updatedAt
 
   academy Academy @relation(fields: [academyId], references: [id], onDelete: Restrict)
+  user User? @relation(fields: [userId], references: [id])
   classSession ClassSession[]
+
+  @@unique([academyId, cpf])
 }
 
 model ClassSession {

@@ -5,6 +5,7 @@ import {
   Calendar,
   ChevronLeft,
   ClipboardList,
+  GraduationCap,
   LayoutDashboard,
   LogOut,
   MessageSquare,
@@ -23,6 +24,7 @@ interface SidebarProps {
 const navItems = [
   { label: "Inicio", href: "/", icon: LayoutDashboard },
   { label: "Alunos", href: "/alunos", icon: Users },
+  { label: "Professores", href: "/professores", icon: GraduationCap },
   { label: "Planos", href: "/planos", icon: ClipboardList },
   { label: "Agendamentos", href: "/agendamentos", icon: Calendar },
   { label: "Mensagens", href: "/mensagens", icon: MessageSquare },

@@ -6,7 +6,7 @@ import z from "zod";
 */
 
 export const studentSchema = z.object({
-  name: z.string().min(3, "O nome deve conter no mínimo 3 caracteres"),
+  name: z.string().trim().min(3, "O nome deve conter no mínimo 3 caracteres"),
   phone: z
     .string()
     .trim()

@@ -12,7 +12,7 @@ import { Button } from "@base-ui/react/button";
  * que continua sendo a validação autoritativa.
  */
 const formSchema = z.object({
-  name: z.string().min(3, "Mínimo 3 caracteres"),
+  name: z.string().trim().min(3, "Mínimo 3 caracteres"),
   phone: z
     .string()
     .trim()
@@ -158,7 +158,7 @@ export function StudentForm({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-primary text-white hover:bg-primary-focus p-1.5 rounded-xl"
+        className="w-full bg-[var(--primary)] text-white hover:bg-[var(--primary-focus)] p-1.5 rounded-xl"
       >
         {isSubmitting ? "Salvando..." : "Salvar"}
       </Button>

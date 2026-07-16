@@ -38,4 +38,16 @@ export class ProfessorRepository {
       data: { deletedAt: new Date(), active: false },
     });
   }
+
+  // Conta aulas futuras ainda abertas deste professor (bloqueia inativação)
+  async countFutureClasses(professorId: string, academyId: string) {
+    return await prisma.professor.count({
+      where: {
+        professorId,
+        academyId,
+        status: "OPEN",
+        startAt: { gt: new Date() },
+      },
+    });
+  }
 }

@@ -13,3 +13,7 @@ export const professorSchema = z.object({
 });
 
 export type ProfessorSchema = z.infer<typeof professorSchema>;
+
+export const professorUpdateSchema = professorSchema.partial();
+
+export type ProfessorUpdateSchema = z.infer<typeof professorUpdateSchema>;
