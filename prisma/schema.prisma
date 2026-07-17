@@ -14,6 +14,13 @@ enum Role {
   PROFESSOR
 }
 
+enum StudentPackageStatus {
+  ACTIVE // válido e com créditos
+  EXPIRED // Passou da validade
+  DEPLETED // créditos esgotados
+  CANCELLED // cancelado manulmente
+} 
+
 enum AppointmentStatus {
   BOOKED //marcado sem confirmação
   CONFIRMED //confirmado presença
@@ -38,6 +45,8 @@ model Academy {
   professors Professor[]
   classSessions ClassSession[]
   appointments Appointment[]
+  plans Plan[]
+  studentPackages StudentPackage[]
 }
 
 model User {
@@ -92,6 +101,7 @@ model Student {
 
   academy Academy @relation(fields: [academyId], references: [id])
   appointments Appointment[]
+  studentPackages StudentPackage[]
 
   // CPF único POR academia
   @@unique([academyId, cpf])
@@ -116,6 +126,46 @@ model Professor {
   classSession ClassSession[]
 
   @@unique([academyId, cpf])
+}
+
+model Plan {
+  id String @id @default(uuid())
+  academyId String
+  name String
+  credits Int //quantidade de aulas
+  validityDays Int // validade em dias a partir da ativação
+  price Decimal
+  active Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Restrict)
+  studentPackages StudentPackage[]
+
+  @@unique([academyId, name]) // não repetir nome de plano na mesma academia
+}
+
+model StudentPackage{
+  id String @id @default(uuid())
+  academyId String
+  studentId String
+  planId String
+
+  creditsTotal Int // quantidade comprada
+  creditsRemaining Int // contador que diminui a cada agendamento
+  startedAt DateTime @default(now())
+  expiresAt DateTime //calculado no service
+  status StudentPackageStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  academy Academy @relation(fields: [academyId], references: [id], onDelete: Restrict)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
+  plan Plan @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  @@index([academyId, studentId])
 }
 
 model ClassSession {
