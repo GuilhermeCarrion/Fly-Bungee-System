@@ -131,6 +131,7 @@ Funcionalidades que agregam valor mas ficam para **depois do MVP**. (O "não faz
   - *Building block técnico:* recorrência na `ClassSession` (gerar sessões "toda terça 19h" sem cadastro manual).
   - **Débito de crédito = tardio (modelo "molde", não "reserva"):** o padrão recorrente é só preferência e NÃO debita crédito adiantado; o crédito só sai quando o agendamento realmente acontece (cron gera / confirmação). Assim o crédito é um pote fungível — aula avulsa (sábado especial) e feriado não travam o aluno. Só bloqueia quando `creditsRemaining == 0` de verdade.
   - **Decisões a validar com o cliente:** aula especial custa 1 ou mais créditos? (campo `creditCost` na aula, padrão 1); em que momento o crédito é debitado (geração/confirmação/presença); e avisar (não travar) quando o padrão excede os créditos do pacote.
+- **Ficha detalhada do aluno (`/alunos/[id]`):** o "prontuário" — cards com histórico corrido de **pacotes**, **aulas/presenças** e **agendamentos**, além dos dados cadastrais. Substitui o modal de pacotes (solução rápida do S3) quando houver conteúdo suficiente pra justificar. Prepara terreno pro histórico do S4.
 - **Tipos/modalidades de aula:** catálogo (tipo `Plan`, mas de aula) — só se surgir mais de uma modalidade.
 - **Relatórios** de frequência/inadimplência/agendamentos, exportáveis em PDF/CSV (RF07).
 - **Automação WhatsApp + `Jobs` + `node-cron`:** a "inteligência" interna (confirmação 12h antes, no-show automático, alerta de expiração 3 dias antes). Fase própria, discutida à parte.

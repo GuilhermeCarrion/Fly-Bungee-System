@@ -1,6 +1,7 @@
 "use client";
 
 import { StudentForm } from "@/components/students/StudentForm";
+import { StudentPackages } from "@/components/students/StudentPackages";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal } from "@/components/ui/modal";
@@ -12,7 +13,7 @@ import {
 } from "@/hooks/useStudents";
 import { apiError } from "@/lib/apiError";
 import { Student } from "@/types/models";
-import { Pencil, Plus, UserX } from "lucide-react";
+import { Package, Pencil, Plus, UserX } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -34,6 +35,9 @@ export default function AlunosPage() {
     if (!q) return true;
     return s.name.toLowerCase().includes(q) || s.cpf.includes(q);
   });
+
+  // Packages do aluno
+  const [packagesOf, setPackagesOf] = useState<Student | null>(null);
 
   return (
     <div className="space-y-6">
@@ -114,6 +118,14 @@ export default function AlunosPage() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
+                      onClick={() => setPackagesOf(s)}
+                      title="Pacotes"
+                    >
+                      <Package className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
                       onClick={() => setEditing(s)}
                       title="Editar"
                     >
@@ -181,6 +193,20 @@ export default function AlunosPage() {
                 onError: (e) => toast.error(apiError(e)),
               });
             }}
+          />
+        )}
+      </Modal>
+
+      {/* Pacotes */}
+      <Modal
+        open={!!packagesOf}
+        onClose={() => setPackagesOf(null)}
+        title={`Pacotes - ${packagesOf?.name ?? ""}`}
+      >
+        {packagesOf && (
+          <StudentPackages
+            studentId={packagesOf.id}
+            studentActive={packagesOf.active}
           />
         )}
       </Modal>

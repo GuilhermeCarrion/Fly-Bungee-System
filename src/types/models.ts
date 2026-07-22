@@ -26,3 +26,36 @@ export interface Professor {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Plan {
+  id: string;
+  academyId: string;
+  name: string;
+  credits: string;
+  validityDays: string;
+  price: string; // Decimal - chega como string no JSON
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type StudentPackageStatus =
+  | "ACTIVE"
+  | "EXPIRED"
+  | "DEPLETED"
+  | "CANCELLED";
+
+export interface StudentPackage {
+  id: string;
+  academyId: string;
+  studentId: string;
+  planId: string;
+  creditsTotal: number;
+  creditsRemaining: number;
+  startedAt: string;
+  expiresAt: string;
+  status: StudentPackageStatus;
+  createdAt: string;
+  updatedAt: string;
+  plan?: { name: string }; // vem do include no listByStudent
+}
