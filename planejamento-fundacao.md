@@ -111,7 +111,9 @@ Misturar os dois num enum só vira bagunça — por isso ficam separados.
 - ✅ Multi-tenant SaaS via `academyId`.
 - ✅ **Modelo de aluno simples** (1 academia por aluno; sem M:N).
 - ✅ **Limites físicos = bloqueio** fora da faixa (42–107 kg, ≥1,40 m). Futuro: mensagem amigável explicando o motivo de segurança — a validar com o cliente (que já relatou que não deve ser permitido).
-- ✅ **Aula experimental** = flag `isTrial` + `approvedBy` no `Appointment`. O mesmo mecanismo servirá para **eventos gratuitos** no futuro.
+- ✅ **Aula experimental = um plano de 1 crédito** (é **cobrada**, ex.: R$50), atribuída como pacote normal. Reusa toda a máquina de créditos — sem caminho especial no agendamento. A **aprovação é o próprio ato de atribuir** o pacote. *(Substitui a ideia anterior de flag `isTrial`/`approvedBy` no `Appointment`.)*
+  - **Decidido:** `Plan.isTrial = true` marca o plano experimental e o `assign` bloqueia a **segunda** atribuição por aluno (regra do TCC: 1x por aluno). Depois disso o aluno usa planos comuns — **avulsa** (1 crédito, ilimitada) ou pacote.
+  - **Preços são configuráveis pela academia** — o sistema não fixa valores; experimental e avulsa são apenas linhas do catálogo `Plan`.
 - ✅ **Recuperação de senha + refresh token** entram junto da **migração para cookies httpOnly** (sprint de hardening de auth, depois do núcleo — "mata dois coelhos").
 - ✅ **Rotas** sem prefixo `dashboard`, via route group `(painel)` (ver seção 7).
 

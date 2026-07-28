@@ -43,6 +43,13 @@ export class StudentPackageRepository {
     });
   }
 
+  // Aluno já usou algum pacote de plano experimental
+  async findTrialByStudent(studentId: string, academyId: string) {
+    return await prisma.studentPackage.findFirst({
+      where: { studentId, academyId, plan: { isTrial: true } },
+    });
+  }
+
   async update(id: string, data: Prisma.StudentPackageUpdateInput) {
     return await prisma.studentPackage.update({ where: { id }, data });
   }

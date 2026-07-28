@@ -24,6 +24,15 @@ export class StudentPackageService {
     if (!plan) throw new AppError("Plano não encontrado", 404);
     if (!plan.active) throw new AppError("Este plano está inativo", 409);
 
+    if (plan.isTrial) {
+      const usedTrial = await repository.findTrialByStudent(
+        data.studentId,
+        academyId,
+      );
+      if (usedTrial)
+        throw new AppError("Este aluno já utilizou a aula experimental", 409);
+    }
+
     const startedAt = data.startedAt ?? new Date();
     const expiresAt = new Date(startedAt);
     expiresAt.setDate(expiresAt.getDate() + plan.validityDays);

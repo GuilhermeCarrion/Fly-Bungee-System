@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ClassSessionSchema } from "@/schemas/classSession.schema";
+import { AppointmentStatus } from "@prisma/client";
 
 export class ClassSessionRepository {
   async create(data: ClassSessionSchema & { academyId: string }) {
@@ -17,7 +18,19 @@ export class ClassSessionRepository {
   async findById(id: string, academyId: string) {
     return await prisma.classSession.findFirst({
       where: { id, academyId },
-      include: { _count: { select: { appointments: true } } },
+      include: {
+        _count: {
+          select: {
+            appointments: {
+              where: {
+                status: {
+                  in: [AppointmentStatus.BOOKED, AppointmentStatus.CONFIRMED],
+                },
+              },
+            },
+          },
+        },
+      },
     });
   }
 

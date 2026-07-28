@@ -28,6 +28,13 @@ enum AppointmentStatus {
   CANCELLED //Cancelado
 }
 
+enum AttendanceStatus{
+  PENDING // aula ainda não aconteceu / presença não registrada
+  PRESENT // compareceu 
+  ABSENT // faltou (registrado manulmente)
+  NO_SHOW // faltou sem avisar (automação futura)
+}
+
 enum ClassSessionStatus {
   OPEN
   CANCELLED
@@ -137,6 +144,8 @@ model Plan {
   price Decimal
   active Boolean @default(true)
 
+  isTrial Boolean @default(false) // marca plano de aula experimentaç (1x por aluno)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -165,6 +174,8 @@ model StudentPackage{
   student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
   plan Plan @relation(fields: [planId], references: [id], onDelete: Restrict)
 
+  appointments Appointment[]
+
   @@index([academyId, studentId])
 }
 
@@ -176,6 +187,9 @@ model ClassSession {
   startAt DateTime
   capacity Int
   status ClassSessionStatus @default(OPEN)
+
+  durationMin Int @default(60) // duração da aula
+  minCapacity Int @default(3) // Minimo para aula acontecer
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -192,13 +206,17 @@ model Appointment {
   academyId String
   studentId String
   classSessionId String
+  studentPackageId String? // Qual pacote o crédito saiu
 
   status AppointmentStatus @default(BOOKED)
+  attendance AttendanceStatus @default(PENDING) // Eixo de presença
   
   confirmedAt DateTime?
   cancelledAt DateTime?
   rescheduledAt DateTime?
   rescheduleFromId String?
+  checkedInAt DateTime? 
+  checkedInById String? // ID de quem registrou 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -206,9 +224,10 @@ model Appointment {
   academy Academy @relation(fields: [academyId], references: [id], onDelete: Restrict)
   student Student @relation(fields: [studentId], references: [id], onDelete: Restrict)
   classSession ClassSession @relation(fields: [classSessionId], references: [id], onDelete: Restrict)
+  studentPackage StudentPackage? @relation(fields: [studentPackageId], references: [id], onDelete: SetNull)
 
   // Regras de estrutura
-  @@unique([classSessionId, studentId]) //Aluno não pode agendar 2x a msm aula
+  @@index([classSessionId, studentId])
   @@index([academyId, classSessionId])
   @@index([academyId, studentId])
 }
