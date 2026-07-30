@@ -15,6 +15,13 @@ const CANCEL_WINDOW_HOURS = 2; // Cancelar com <2hrs não estorna
 const ATTENDANCE_WINDOW_MIN = 30; // Presença só na janela aproximadamente 30min
 
 export class AppointmentService {
+  async listBySession(classSessionId: string, academyId: string) {
+    return await appointmentRepository.findAllBySession(
+      classSessionId,
+      academyId,
+    );
+  }
+
   async create(data: AppointmentSchema, academyId: string) {
     // Validação de aula - Existe e aberta
     const session = await sessionRepository.findById(

@@ -7,10 +7,33 @@ export class ClassSessionRepository {
     return await prisma.classSession.create({ data });
   }
 
-  async findAll(academyId: string) {
+  async findAll(academyId: string, from?: Date, to?: Date) {
     return await prisma.classSession.findMany({
-      where: { academyId, status: "OPEN" },
-      include: { professor: { select: { name: true } } },
+      where: {
+        academyId,
+        ...(from || to
+          ? {
+              startAt: {
+                ...(from ? { gte: from } : {}),
+                ...(to ? { lt: to } : {}),
+              },
+            }
+          : {}),
+      },
+      include: {
+        professor: { select: { name: true } },
+        _count: {
+          select: {
+            appointments: {
+              where: {
+                status: {
+                  in: [AppointmentStatus.BOOKED, AppointmentStatus.CONFIRMED],
+                },
+              },
+            },
+          },
+        },
+      },
       orderBy: { startAt: "asc" },
     });
   }

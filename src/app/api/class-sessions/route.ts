@@ -22,5 +22,5 @@ export async function GET(req: Request) {
   const { error, academyId } = authenticateRequest(req);
   if (error) return error;
 
-  return classSessionController.index(academyId!);
+  return classSessionController.index(req, academyId!);
 }

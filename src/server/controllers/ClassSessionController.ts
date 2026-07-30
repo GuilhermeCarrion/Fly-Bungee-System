@@ -25,9 +25,14 @@ export class ClassSessionController {
     }
   }
 
-  async index(academyId: string) {
+  async index(req: Request, academyId: string) {
     try {
-      const sessions = await service.list(academyId);
+      const url = new URL(req.url);
+      const fromStr = url.searchParams.get("from");
+      const toStr = url.searchParams.get("to");
+      const from = fromStr ? new Date(fromStr) : undefined;
+      const to = toStr ? new Date(toStr) : undefined;
+      const sessions = await service.list(academyId, from, to);
       return NextResponse.json(sessions, { status: 200 });
     } catch (error) {
       return handleError(error);

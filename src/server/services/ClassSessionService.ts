@@ -10,8 +10,8 @@ export class ClassSessionService {
     return await repository.create({ ...data, academyId });
   }
 
-  async list(academyId: string) {
-    return await repository.findAll(academyId);
+  async list(academyId: string, from?: Date, to?: Date) {
+    return await repository.findAll(academyId, from, to);
   }
 
   async update(

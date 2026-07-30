@@ -59,3 +59,35 @@ export interface StudentPackage {
   updatedAt: string;
   plan?: { name: string }; // vem do include no listByStudent
 }
+
+export type AttendanceStatus = "PENDING" | "PRESENT" | "ABSENT" | "NO_SHOW";
+export type AppointmentStatus =
+  | "BOOKED"
+  | "CONFIRMED"
+  | "CANCELLED"
+  | "RESCHEDULED";
+
+export interface ClassSession {
+  id: string;
+  academyId: string;
+  professorId: string;
+  name: string;
+  startAt: string;
+  durationMin: number;
+  capacity: number;
+  minCapacity: number;
+  status: "OPEN" | "CANCELLED" | "COMPLETED";
+  professor?: { name: string };
+  _count?: { appointments: number };
+}
+
+export interface Appointment {
+  id: string;
+  studentId: string;
+  classSessionId: string;
+  studentPackageId: string | null;
+  status: AppointmentStatus;
+  attendance: AttendanceStatus;
+  student?: { name: string };
+  createdAt: string;
+}

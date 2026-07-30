@@ -27,6 +27,15 @@ export class AppointmentController {
     }
   }
 
+  async index(classSessionId: string, academyId: string) {
+    try {
+      const result = await service.listBySession(classSessionId, academyId);
+      return NextResponse.json(result, { status: 200 });
+    } catch (error) {
+      return handleError(error);
+    }
+  }
+
   async action(req: Request, id: string, academyId: string) {
     try {
       const body = await req.json();
@@ -56,7 +65,7 @@ export class AppointmentController {
 
       return NextResponse.json(result, { status: 200 });
     } catch (error) {
-      handleError(error);
+      return handleError(error);
     }
   }
 
