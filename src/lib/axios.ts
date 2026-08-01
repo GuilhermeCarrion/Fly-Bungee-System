@@ -17,11 +17,11 @@ import axios, {
  */
 
 export const apiPublic: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+  baseURL: "/api",
 });
 
 export const apiPrivate: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api",
+  baseURL: "/api",
 });
 
 // Chave unica do token no localStorage
