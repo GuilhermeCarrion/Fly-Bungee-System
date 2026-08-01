@@ -41,7 +41,7 @@ export class ProfessorRepository {
 
   // Conta aulas futuras ainda abertas deste professor (bloqueia inativação)
   async countFutureClasses(professorId: string, academyId: string) {
-    return await prisma.professor.count({
+    return await prisma.classSession.count({
       where: {
         professorId,
         academyId,
