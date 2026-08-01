@@ -5,17 +5,21 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
+  const academyName = process.env.SEED_ACADEMY_NAME ?? "Fly Bungee";
+  const name = process.env.SEED_ADMIN_NAME ?? "Admin";
+  const email = process.env.SEED_ADMIN_EMAIL;
+  const password = process.env.SEED_ADMIN_PASSWORD;
+
+  if (!email || !password)
+    throw new Error("Defina dados SEED antes de rodar o seed.");
+
   // Cria ou procura por academia "upsert"
   // Where deve conter um campo unique/primary key
   const academy = await prisma.academy.upsert({
-    where: { name: "Fly Bungee" },
+    where: { name: academyName },
     update: {},
-    create: { name: "Fly Bungee" },
+    create: { name: academyName },
   });
-
-  // Dados teste de ADMIN
-  const email = "admin@flybungee.com";
-  const password = "Admin@123";
 
   //const passwordHash = await hashPassword(password);
   const salt = await bcrypt.genSalt(10);
@@ -34,7 +38,7 @@ async function main() {
     },
   });
 
-  //console.log(`Seed OK: ${email}, ${password}`);
+  console.log(`Seed OK: ${email}, ${password}`);
 }
 
 main()
